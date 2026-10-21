@@ -1,7 +1,7 @@
 {
   "meta": {
     "name": "Antigravity 2.0 Korean Language Pack",
-    "version": "1.3.4",
+    "version": "1.3.5",
     "targetVersion": "2.24.0+",
     "locale": "ko-KR",
     "updatedAt": "2026-10-21"
@@ -1340,7 +1340,21 @@
     "Upgrade subscription": "구독 업그레이드",
     "Authenticated via Enterprise Gateway": "Enterprise Gateway를 통해 인증됨",
     "Project ID:": "프로젝트 ID:",
-    "Project ID: ": "프로젝트 ID: "
+    "Project ID: ": "프로젝트 ID: ",
+    "Configure the browser subagent. It requires": "브라우저 서브에이전트를 설정합니다. 사용하려면",
+    "to be installed.": "이(가) 설치되어 있어야 합니다.",
+    "The browser subagent can be invoked by typing /browser in the conversation input box.": "대화 입력창에 /browser 를 입력하여 브라우저 서브에이전트를 호출할 수 있습니다.",
+    "The browser subagent has been disabled by your administrator. Contact your administrator to enable browser use.": "관리자가 브라우저 서브에이전트를 비활성화했습니다. 브라우저 기능을 활성화하려면 관리자에게 문의하세요.",
+    "Configure the browser subagent. It requires Google Chrome to be installed. The browser subagent can be invoked by typing /browser in the conversation input box.": "브라우저 서브에이전트를 설정합니다. 사용하려면 Google Chrome이(가) 설치되어 있어야 합니다. 대화 입력창에 /browser 를 입력하여 브라우저 서브에이전트를 호출할 수 있습니다.",
+    "Configure the browser subagent. It requires Google Chrome to be installed.": "브라우저 서브에이전트를 설정합니다. 사용하려면 Google Chrome이(가) 설치되어 있어야 합니다.",
+    "By default, agents work in folders you choose and ask before sensitive changes. Adjust this anytime in Settings.": "기본적으로 에이전트는 사용자가 선택한 폴더에서 작업하며 중요한 변경 전에 확인을 요청합니다. 설정에서 언제든 변경할 수 있습니다.",
+    "Try out early-stage features before they ship. These may be changed or removed at any time. These features are experimental, and we make no guarantees about performance or functionality.": "정식 출시 전 초기 단계의 기능을 미리 사용해 봅니다. 언제든지 변경되거나 삭제될 수 있습니다. 실험적인 기능이므로 성능이나 동작을 보장하지 않습니다.",
+    "Managed by Enterprise Gateway": "Enterprise Gateway에서 관리됨",
+    "GCP Project ID for enterprise features.": "엔터프라이즈 기능을 위한 GCP 프로젝트 ID입니다.",
+    "Default Workspace VCS": "기본 워크스페이스 VCS",
+    "VCS used when creating a new workspace, including workspaces generated based off your initial prompt.": "초기 프롬프트를 바탕으로 생성되는 워크스페이스를 포함하여, 새 워크스페이스를 만들 때 사용할 버전 관리 시스템(VCS)입니다.",
+    "Print telemetry to the console": "콘솔에 텔레메트리 출력",
+    "No matching flags": "일치하는 플래그 없음"
   },
   "ui_patterns": [
     {
