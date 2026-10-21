@@ -41,10 +41,11 @@
 
   const TRANSLATABLE_ATTRS = ['placeholder', 'title', 'aria-label'];
 
-  // If already initialized, just hot-reload the dictionary and re-apply
-  if (window.__AGY_KO_I18N__ && injectedDict) {
-    window.__AGY_KO_I18N__.updateDictionary(injectedDict);
-    return window.__AGY_KO_I18N__.getStats();
+  // Clean up any previously initialized runtime instance before re-initializing
+  if (window.__AGY_KO_I18N__ && typeof window.__AGY_KO_I18N__.destroy === 'function') {
+    try {
+      window.__AGY_KO_I18N__.destroy();
+    } catch (_e) {}
   }
 
   let dict = injectedDict || window.__AGY_KO_DICT__ || { ui_exact: {}, ui_patterns: [] };
@@ -52,12 +53,14 @@
   let compiledPatterns = [];
   let enabled = true;
 
-  const origTextMap = new WeakMap();
-  const lastTranslatedTextMap = new WeakMap();
-  const origAttrMap = new WeakMap();
-  const lastTranslatedAttrMap = new WeakMap();
+  // Persist WeakMaps on window across live reloads so original English text is never lost
+  const origTextMap = window.__AGY_KO_ORIG_MAP__ || (window.__AGY_KO_ORIG_MAP__ = new WeakMap());
+  const lastTranslatedTextMap = window.__AGY_KO_LAST_TRANS_MAP__ || (window.__AGY_KO_LAST_TRANS_MAP__ = new WeakMap());
+  const origAttrMap = window.__AGY_KO_ORIG_ATTR__ || (window.__AGY_KO_ORIG_ATTR__ = new WeakMap());
+  const lastTranslatedAttrMap = window.__AGY_KO_LAST_ATTR__ || (window.__AGY_KO_LAST_ATTR__ = new WeakMap());
   const observedDocs = new WeakSet();
   const observedRoots = new WeakSet();
+  const activeObservers = [];
 
   let translatedNodeCount = 0;
   let translatedAttrCount = 0;
@@ -79,6 +82,87 @@
 
   compileDictionary(dict);
 
+  function formatLimitName(name) {
+    if (!name) return '';
+    const trimmed = name.trim();
+    const lower = trimmed.toLowerCase();
+    const map = {
+      weekly: '주간',
+      daily: '일일',
+      monthly: '월간',
+      hourly: '시간당',
+    };
+    if (map[lower]) return map[lower];
+    const numHour = lower.match(/^(\d+)-hour$/);
+    if (numHour) return `${numHour[1]}시간`;
+    const numDay = lower.match(/^(\d+)-day$/);
+    if (numDay) return `${numDay[1]}일`;
+    const numMin = lower.match(/^(\d+)-minute$/);
+    if (numMin) return `${numMin[1]}분`;
+    return trimmed;
+  }
+
+  function formatDuration(timeStr) {
+    if (!timeStr) return '';
+    let str = timeStr.trim();
+    str = str.replace(/less than a minute/gi, '1분 미만');
+    str = str.replace(/<1m/gi, '1분 미만');
+    str = str.replace(/(\d+)\s*days?/gi, '$1일');
+    str = str.replace(/(\d+)\s*hours?/gi, '$1시간');
+    str = str.replace(/(\d+)\s*minutes?/gi, '$1분');
+    str = str.replace(/(\d+)\s*mins?/gi, '$1분');
+    str = str.replace(/(\d+)\s*seconds?/gi, '$1초');
+    str = str.replace(/(\d+)\s*secs?/gi, '$1초');
+    str = str.replace(/(\d+)d\b/gi, '$1일');
+    str = str.replace(/(\d+)h\b/gi, '$1시간');
+    str = str.replace(/(\d+)m\b/gi, '$1분');
+    str = str.replace(/(\d+)s\b/gi, '$1초');
+    str = str.replace(/[,\s]+/g, ' ').trim();
+    return str;
+  }
+
+  function translateQuotaSentence(trimmed) {
+    let m = trimmed.match(/^You have used some of your (.+?) limit, it will fully refresh in (.+?)\.?$/i);
+    if (m) {
+      const limit = formatLimitName(m[1]);
+      const duration = formatDuration(m[2]);
+      return `${limit} 사용량 한도를 일부 사용했습니다. ${duration} 후에 완전히 초기화됩니다.`;
+    }
+
+    m = trimmed.match(/^You have hit your (.+?) limit, the (.+?) limit does not currently apply\. Your (.+?) limit will fully refresh in (.+?)\.?$/i);
+    if (m) {
+      const hitLimit = formatLimitName(m[1]);
+      const otherLimit = formatLimitName(m[2]);
+      const duration = formatDuration(m[4]);
+      return `${hitLimit} 한도에 도달하여 현재 ${otherLimit} 한도는 적용되지 않습니다. ${hitLimit} 한도는 ${duration} 후에 완전히 초기화됩니다.`;
+    }
+
+    m = trimmed.match(/^You have hit your (.+?) limit, it refreshes in (.+?)\.\s*If on a supported paid plan, you can use AI credits in the interim or upgrade to a higher tier\.?$/i);
+    if (m) {
+      const limit = formatLimitName(m[1]);
+      const duration = formatDuration(m[2]);
+      return `${limit} 사용량 한도에 도달했습니다. ${duration} 후에 초기화됩니다. 지원되는 유료 요금제를 이용 중인 경우 AI 크레딧을 사용하거나 상위 티어로 업그레이드할 수 있습니다.`;
+    }
+
+    m = trimmed.match(/^You have hit your (.+?) limit, it refreshes in (.+?)\.?$/i);
+    if (m) {
+      const limit = formatLimitName(m[1]);
+      const duration = formatDuration(m[2]);
+      return `${limit} 사용량 한도에 도달했습니다. ${duration} 후에 초기화됩니다.`;
+    }
+
+    m = trimmed.match(/^Resets in (.+?)$/i);
+    if (m) {
+      const duration = formatDuration(m[1]);
+      if (duration === '1분 미만' || duration === '<1m') {
+        return '1분 이내 초기화';
+      }
+      return `${duration} 후 초기화`;
+    }
+
+    return null;
+  }
+
   function translateString(raw) {
     if (!raw || typeof raw !== 'string') return null;
     const trimmed = raw.trim();
@@ -95,7 +179,15 @@
       return lead + hit + trail;
     }
 
-    // 2. Pattern lookup
+    // 2. Dynamic server quota / duration sentences
+    const quotaHit = translateQuotaSentence(trimmed);
+    if (quotaHit) {
+      const lead = raw.match(/^\s*/)?.[0] || '';
+      const trail = raw.match(/\s*$/)?.[0] || '';
+      return lead + quotaHit + trail;
+    }
+
+    // 3. Pattern lookup
     for (let i = 0; i < compiledPatterns.length; i++) {
       const { regex, replace } = compiledPatterns[i];
       if (regex.test(trimmed)) {
@@ -289,6 +381,7 @@
       attributes: true,
       attributeFilter: TRANSLATABLE_ATTRS,
     });
+    activeObservers.push(observer);
   }
 
   function hookIframe(iframe) {
@@ -465,6 +558,14 @@
           : '🇺🇸 영문(원문) UI 모드 전환 (Alt+Shift+K)'
       );
       return enabled;
+    },
+    destroy() {
+      for (let i = 0; i < activeObservers.length; i++) {
+        try {
+          activeObservers[i].disconnect();
+        } catch (_e) {}
+      }
+      activeObservers.length = 0;
     },
     collectUntranslated: collectUntranslatedStrings,
     getStats() {
