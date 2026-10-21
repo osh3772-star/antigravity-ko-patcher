@@ -1,10 +1,10 @@
 {
   "meta": {
     "name": "Antigravity 2.0 Korean Language Pack",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "targetVersion": "2.24.0+",
     "locale": "ko-KR",
-    "updatedAt": "2026-10-18"
+    "updatedAt": "2026-10-21"
   },
   "glossary": {
     "Agent": "에이전트",
@@ -44,7 +44,6 @@
     "Check for Updates": "업데이트 확인",
     "Docs": "공식 문서",
     "Click to Open Docs": "공식 문서 열기",
-
     "New Conversation": "새 대화",
     "New conversation": "새 대화",
     "Conversation History": "대화 기록",
@@ -120,7 +119,6 @@
     "Attach Antigravity server logs": "Antigravity 서버 로그 첨부",
     "Attach a screenshot (optional)": "스크린샷 첨부 (선택 사항)",
     "Send feedback as": "피드백 보낼 계정",
-
     "Pinned Conversations": "고정된 대화",
     "Pinned Actions": "고정된 작업",
     "Auto Pin": "자동 고정",
@@ -196,7 +194,6 @@
     "Search projects...": "프로젝트 검색...",
     "Search workspaces...": "워크스페이스 검색...",
     "Search tabs, files, plugins, subagents, artifacts, tasks...": "탭, 파일, 플러그인, 서브에이전트, 아티팩트, 작업 검색...",
-
     "Ask anything, @ to mention, / for actions": "무엇이든 물어보세요 (@ 멘션, / 명령어 실행)",
     "Pick a suggestion below to get started, or ask me anything.": "아래 추천 작업으로 시작하거나 무엇이든 물어보세요.",
     "Get started": "시작하기",
@@ -222,7 +219,6 @@
     "Ask about your code or any topic, get clear answers.": "코드 구조나 궁금한 주제를 물어보고 명확한 답변을 받으세요.",
     "Write and edit docs": "문서 작성 및 다듬기",
     "Draft documents, emails, and notes that sound like you.": "문서, 이메일, 기술 노트를 자연스러운 문체로 작성합니다.",
-
     "Message input": "메시지 입력",
     "Add context": "컨텍스트 추가",
     "Add Context": "컨텍스트 추가",
@@ -258,7 +254,6 @@
     "Cancel Sending Message": "메시지 전송 취소",
     "Ask a quick question without interrupting the main conversation.": "진행 중인 대화를 중단하지 않고 빠른 질문을 보냅니다.",
     "Side Question:": "보조 질문:",
-
     "Working": "작업 중",
     "Working...": "작업 중...",
     "Thinking": "생각 중",
@@ -342,7 +337,6 @@
     "Refreshing...": "새로고침 중...",
     "Submitting...": "제출 중...",
     "Creating...": "생성 중...",
-
     "Proceed": "계속 진행",
     "Proceed with Plan": "계획대로 진행",
     "Proceed Anyway": "그래도 계속 진행",
@@ -514,7 +508,6 @@
     "Next Page": "다음 페이지",
     "Previous question": "이전 질문",
     "Next question": "다음 질문",
-
     "Overview": "개요",
     "Command Center": "커맨드 센터",
     "Subagents": "서브에이전트",
@@ -593,7 +586,6 @@
     "Next Aux Pane Tab": "다음 보조 패널 탭",
     "Collapse All Folders": "모든 폴더 접기",
     "Expand All Folders": "모든 폴더 펼치기",
-
     "Agent Edits": "에이전트 수정 내역",
     "Changes": "변경사항",
     "Staged Changes": "스테이징된 변경",
@@ -636,7 +628,6 @@
     "Before": "변경 전",
     "After": "변경 후",
     "Merge Conflict": "병합 충돌(Merge Conflict)",
-
     "Request Review": "검토 요청",
     "Require Review": "검토 필수",
     "Default": "기본값",
@@ -654,12 +645,10 @@
     "Run all commands without restrictions.": "모든 명령을 제한 없이 즉시 실행합니다.",
     "Confirmation required to execute this step": "이 단계를 실행하려면 사용자 승인이 필요합니다",
     "The conversation was compacted to fit within the context window.": "대화 내용이 길어져 컨텍스트 창 크기에 맞게 자동 요약되었습니다.",
-
     "Send Immediately": "즉시 전송",
     "Interrupt the agent and send immediately.": "에이전트 작업을 중단하고 메시지를 즉시 전송합니다.",
     "Queue": "대기열 추가",
     "Queue until after the current turn.": "현재 응답 턴이 끝난 후 순차적으로 전송합니다.",
-
     "Runs on": "실행 위치",
     "Runs on this computer": "이 PC에서 실행",
     "Runs in the cloud": "클라우드에서 실행",
@@ -687,7 +676,6 @@
     "Refreshed credentials for all automations.": "모든 자동화 작업의 인증 정보를 갱신했습니다.",
     "Failed to refresh credentials": "인증 정보 갱신 실패",
     "Refresh all credentials": "모든 인증 정보 새로고침",
-
     "Search and discover customizations to extend your Agent's capabilities.": "에이전트의 기능을 확장할 스킬, 플러그인, MCP 서버를 검색하고 관리하세요.",
     "Search customizations...": "맞춤 설정 검색...",
     "Skills": "스킬",
@@ -782,7 +770,6 @@
     "Extensions": "확장 기능",
     "Extension Is Loading": "확장 기능 불러오는 중",
     "Context Providers": "컨텍스트 제공자",
-
     "General": "일반",
     "Appearance": "화면 표시",
     "Tab": "Tab 자동완성",
@@ -859,7 +846,6 @@
     "Refresh skills paths": "스킬 경로 새로고침",
     "Enter directory path...": "디렉토리 경로 입력...",
     "Type absolute path or navigate folders...": "절대 경로를 입력하거나 폴더를 탐색하세요...",
-
     "Agent Behavior": "에이전트 동작",
     "Agent security mode": "에이전트 보안 모드",
     "Execution": "실행 설정",
@@ -970,7 +956,6 @@
     "Toggle this on to enable read access on contents.": "콘텐츠 읽기 권한을 활성화하려면 켜세요.",
     "Toggle this on to allow creating new pull requests.": "새 풀 리퀘스트(PR) 생성을 허용하려면 켜세요.",
     "Toggle this on to allow creating new issues.": "새 이슈 생성을 허용하려면 켜세요.",
-
     "Theme": "테마",
     "Light Theme": "라이트 테마",
     "Dark Theme": "다크 테마",
@@ -1042,7 +1027,6 @@
     "United States": "미국 (United States)",
     "Europe": "유럽 (Europe)",
     "Pay As You Go": "종량제 (Pay As You Go)",
-
     "Allow List Terminal Commands": "터미널 명령어 허용 목록 (Allowlist)",
     "The agent auto-executes commands matched by an allow list entry.": "허용 목록에 일치하는 명령어는 에이전트가 승인 없이 자동 실행합니다.",
     "Deny List Terminal Commands": "터미널 명령어 차단 목록 (Denylist)",
@@ -1097,7 +1081,6 @@
     "Open Agent on Reload": "새로고침 시 에이전트 패널 열기",
     "Open the agent panel on window reload": "창을 새로고침할 때 에이전트 패널을 자동으로 엽니다.",
     "Open Agent panel on window reload": "창을 새로고침할 때 에이전트 패널을 자동으로 엽니다.",
-
     "Verbose Agent Chat": "상세 에이전트 채팅 표시",
     "Display and preserve intermediate thinking steps.": "에이전트의 중간 추론 및 사고 단계를 생략하지 않고 모두 표시·보존합니다.",
     "Custom Context Menus": "사용자 지정 우클릭 메뉴",
@@ -1109,7 +1092,6 @@
     "Narrow": "좁게",
     "Wide": "넓게",
     "Fill": "가득 채우기",
-
     "Suggestions in Editor": "에디터 내 자동완성 제안",
     "Show suggestions when typing in the editor": "에디터에서 코드를 입력할 때 AI 자동완성 제안을 표시합니다.",
     "Tab to Jump": "Tab 키로 다음 수정 위치 이동",
@@ -1124,7 +1106,6 @@
     "Highlight newly inserted text after accepting a Tab completion.": "Tab 자동완성을 수락한 뒤 새로 삽입된 텍스트를 하이라이트합니다.",
     "Tab Gitignore Access": "Tab의 .gitignore 파일 접근 허용",
     "Allow Tab to view and edit the files in .gitignore. Use with caution if your .gitignore lists files containing credentials, secrets, or other sensitive information.": "Tab 자동완성이 .gitignore에 포함된 파일을 참조·편집할 수 있도록 허용합니다.",
-
     "Enable Browser Tools": "브라우저 도구 활성화",
     "Let the agent use browser tools to open URLs, read web pages, and interact with browser content. This gives the agent access to important (and often critical) knowledge and methods of validation, but any browser integration does increase exposure to external malicious parties for security exploits.": "에이전트가 브라우저 도구를 사용해 URL을 열고 웹 페이지를 읽거나 상호작용할 수 있도록 허용합니다.",
     "Browser Javascript Execution Policy": "브라우저 JavaScript 실행 정책",
@@ -1140,7 +1121,6 @@
     "Custom path for the browser user profile directory. Leave empty for default (~/.gemini/antigravity-browser-profile).": "브라우저 사용자 프로필 폴더 경로입니다. 비워 두면 기본 경로를 사용합니다.",
     "Browser CDP Port": "브라우저 CDP 포트",
     "Port number for Chrome DevTools Protocol remote debugging. Leave empty for default (9222).": "Chrome DevTools Protocol 원격 디버깅 포트 번호입니다. (기본값: 9222)",
-
     "Show Selection Actions": "선택 영역 빠른 작업 표시",
     "Show \"Edit\" and \"Chat\" buttons when selecting text in the editor.": "에디터에서 텍스트를 드래그해 선택했을 때 \"편집\" 및 \"채팅\" 버튼을 표시합니다.",
     "Include Jetski Default Customizations": "기본 내장 맞춤 설정 포함",
@@ -1165,7 +1145,6 @@
     "Trigger multiple response variants from the same prompt.": "동일한 프롬프트에 대해 여러 버전의 응답을 동시에 생성하여 비교합니다.",
     "Use full VCS clones for Best of N": "Best of N 실행 시 전체 VCS 클론 사용",
     "Use full Git clones for Best of N": "Best of N 실행 시 전체 Git 클론 사용",
-
     "New Editor Window": "새 에디터 창",
     "Split Terminal": "터미널 분할",
     "Split Conversation Vertically": "대화창 좌우 분할",
@@ -1251,7 +1230,6 @@
     "Toggle Auxiliary Pane": "보조 패널 토글",
     "Toggle Maximize Auxiliary Pane": "보조 패널 최대화 토글",
     "Toggle Overview Panel": "개요(Overview) 패널 토글",
-
     "Trajectory Debug View": "실행 궤적(Trajectory) 디버그 뷰",
     "Open Trajectory Debug View": "실행 궤적 디버그 뷰 열기",
     "View Debug": "디버그 보기",
@@ -1286,7 +1264,6 @@
     "Description": "설명",
     "Contents": "내용",
     "Response": "응답",
-
     "High": "높음",
     "Medium": "보통",
     "Low": "낮음",
@@ -1296,7 +1273,6 @@
     "Custom": "사용자 지정",
     "Recommended": "추천",
     "Now": "방금",
-
     "Welcome to Antigravity": "Antigravity에 오신 것을 환영합니다",
     "Welcome to the new Antigravity!": "새로운 Antigravity에 오신 것을 환영합니다!",
     "Download the Antigravity IDE": "Antigravity IDE 함께 다운로드",
@@ -1308,7 +1284,34 @@
     "Plugin update required": "플러그인 업데이트 필요",
     "Restart to Update": "업데이트 적용을 위해 재시작",
     "Checking for updates…": "업데이트 확인 중…",
-    "Up to date": "최신 버전입니다"
+    "Up to date": "최신 버전입니다",
+    "Gemini Models": "Gemini 모델",
+    "Gemini models": "Gemini 모델",
+    "Claude and GPT models": "Claude 및 GPT 모델",
+    "Claude and GPT Models": "Claude 및 GPT 모델",
+    "Claude models": "Claude 모델",
+    "GPT models": "GPT 모델",
+    "Weekly Limit Remaining": "주간 잔여 한도",
+    "Five Hour Limit Remaining": "5시간 잔여 한도",
+    "Gemini 4 Argon Weekly Limit": "Gemini 4 Argon 주간 한도",
+    "One Hour Limit Remaining": "1시간 잔여 한도",
+    "Two Hour Limit Remaining": "2시간 잔여 한도",
+    "Three Hour Limit Remaining": "3시간 잔여 한도",
+    "Four Hour Limit Remaining": "4시간 잔여 한도",
+    "Twelve Hour Limit Remaining": "12시간 잔여 한도",
+    "24 Hour Limit Remaining": "24시간 잔여 한도",
+    "Daily Limit Remaining": "일일 잔여 한도",
+    "Monthly Limit Remaining": "월간 잔여 한도",
+    "Hourly Limit Remaining": "시간당 잔여 한도",
+    "Seven Day Limit Remaining": "7일 잔여 한도",
+    "Thirty Day Limit Remaining": "30일 잔여 한도",
+    "See Activity": "사용 내역 보기",
+    "Get More AI Credits": "AI 크레딧 더 구매하기",
+    "Available AI Credits:": "사용 가능한 AI 크레딧:",
+    "Your Plan:": "이용 중인 요금제:",
+    "Your Plan: ": "이용 중인 요금제: ",
+    "Your Plan": "이용 중인 요금제",
+    "When toggled on, Antigravity will use your AI credits to fulfill model requests once you're out of model quota. Antigravity will always use your model quota first before using AI credits.": "활성화하면 모델 할당량이 소진되었을 때 AI 크레딧을 사용하여 모델 요청을 처리합니다. Antigravity는 항상 AI 크레딧보다 모델 할당량을 먼저 사용합니다."
   },
   "ui_patterns": [
     {
@@ -1410,6 +1413,106 @@
     {
       "match": "^Open (.+)$",
       "replace": "$1 열기"
+    },
+    {
+      "match": "^When toggled on, (.+) will use your AI credits to fulfill model requests once you're out of model quota\\. (.+) will always use your model quota first before using AI credits\\.$",
+      "replace": "활성화하면 모델 할당량이 소진되었을 때 AI 크레딧을 사용하여 모델 요청을 처리합니다. $1는 항상 AI 크레딧보다 모델 할당량을 먼저 사용합니다."
+    },
+    {
+      "match": "^Available AI Credits:\\s*(.+)$",
+      "replace": "사용 가능한 AI 크레딧: $1"
+    },
+    {
+      "match": "^Your Plan:\\s*(.+)$",
+      "replace": "이용 중인 요금제: $1"
+    },
+    {
+      "match": "^Shared with: Claude and GPT models$",
+      "replace": "공유 모델: Claude 및 GPT 모델"
+    },
+    {
+      "match": "^Shared with: Gemini Models$",
+      "replace": "공유 모델: Gemini 모델"
+    },
+    {
+      "match": "^Shared with:\\s*(.+)$",
+      "replace": "공유 모델: $1"
+    },
+    {
+      "match": "^You have used some of your weekly limit, it will fully refresh in (\\d+) days?\\.$",
+      "replace": "주간 사용량 한도를 일부 사용했습니다. $1일 후에 완전히 초기화됩니다."
+    },
+    {
+      "match": "^You have used some of your weekly limit, it will fully refresh in (\\d+) hours?\\.$",
+      "replace": "주간 사용량 한도를 일부 사용했습니다. $1시간 후에 완전히 초기화됩니다."
+    },
+    {
+      "match": "^You have used some of your weekly limit, it will fully refresh in (\\d+) mins?\\.$",
+      "replace": "주간 사용량 한도를 일부 사용했습니다. $1분 후에 완전히 초기화됩니다."
+    },
+    {
+      "match": "^You have used some of your (.+?) limit, it will fully refresh in (\\d+) days?\\.$",
+      "replace": "$1 사용량 한도를 일부 사용했습니다. $2일 후에 완전히 초기화됩니다."
+    },
+    {
+      "match": "^You have used some of your (.+?) limit, it will fully refresh in (\\d+) hours?\\.$",
+      "replace": "$1 사용량 한도를 일부 사용했습니다. $2시간 후에 완전히 초기화됩니다."
+    },
+    {
+      "match": "^You have hit your weekly limit, it refreshes in (\\d+) days?\\. If on a supported paid plan, you can use AI credits in the interim or upgrade to a higher tier\\.$",
+      "replace": "주간 사용량 한도에 도달했습니다. $1일 후에 초기화됩니다. 지원되는 유료 요금제를 이용 중인 경우 AI 크레딧을 사용하거나 상위 티어로 업그레이드할 수 있습니다."
+    },
+    {
+      "match": "^You have hit your weekly limit, it refreshes in (\\d+) hours?\\. If on a supported paid plan, you can use AI credits in the interim or upgrade to a higher tier\\.$",
+      "replace": "주간 사용량 한도에 도달했습니다. $1시간 후에 초기화됩니다. 지원되는 유료 요금제를 이용 중인 경우 AI 크레딧을 사용하거나 상위 티어로 업그레이드할 수 있습니다."
+    },
+    {
+      "match": "^You have hit your weekly limit, the (\\d+)-hour limit does not currently apply\\. Your weekly limit will fully refresh in (\\d+) days?\\.$",
+      "replace": "주간 한도에 도달하여 현재 $1시간 한도는 적용되지 않습니다. 주간 한도는 $2일 후에 완전히 초기화됩니다."
+    },
+    {
+      "match": "^You have hit your weekly limit, the (\\d+)-hour limit does not currently apply\\. Your weekly limit will fully refresh in (\\d+) hours?\\.$",
+      "replace": "주간 한도에 도달하여 현재 $1시간 한도는 적용되지 않습니다. 주간 한도는 $2시간 후에 완전히 초기화됩니다."
+    },
+    {
+      "match": "^You have hit your weekly limit, the (.+?) limit does not currently apply\\. Your weekly limit will fully refresh in (\\d+) days?\\.$",
+      "replace": "주간 한도에 도달하여 현재 $1 한도는 적용되지 않습니다. 주간 한도는 $2일 후에 완전히 초기화됩니다."
+    },
+    {
+      "match": "^You have hit your weekly limit, the (.+?) limit does not currently apply\\. Your weekly limit will fully refresh in (\\d+) hours?\\.$",
+      "replace": "주간 한도에 도달하여 현재 $1 한도는 적용되지 않습니다. 주간 한도는 $2시간 후에 완전히 초기화됩니다."
+    },
+    {
+      "match": "^You have hit your (.+?) limit, it refreshes in (\\d+) days?\\.$",
+      "replace": "$1 한도에 도달했습니다. $2일 후에 초기화됩니다."
+    },
+    {
+      "match": "^You have hit your (.+?) limit, it refreshes in (\\d+) hours?\\.$",
+      "replace": "$1 한도에 도달했습니다. $2시간 후에 초기화됩니다."
+    },
+    {
+      "match": "^Resets in <1m$",
+      "replace": "1분 이내 초기화"
+    },
+    {
+      "match": "^Resets in (\\d+)d (\\d+)h$",
+      "replace": "$1일 $2시간 후 초기화"
+    },
+    {
+      "match": "^Resets in (\\d+)d$",
+      "replace": "$1일 후 초기화"
+    },
+    {
+      "match": "^Resets in (\\d+)h (\\d+)m$",
+      "replace": "$1시간 $2분 후 초기화"
+    },
+    {
+      "match": "^Resets in (\\d+)h$",
+      "replace": "$1시간 후 초기화"
+    },
+    {
+      "match": "^Resets in (\\d+)m$",
+      "replace": "$1분 후 초기화"
     }
   ]
 }

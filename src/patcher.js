@@ -11,6 +11,9 @@
  */
 'use strict';
 
+// Disable Electron's asar interception so we can read/write app.asar directly as a raw file
+process.noAsar = true;
+
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
