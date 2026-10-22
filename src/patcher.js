@@ -59,6 +59,20 @@ function computeIntegrity(buffer) {
   };
 }
 
+function isAsarPatched(targetPath = ASAR_PATH) {
+  if (!fs.existsSync(targetPath)) return false;
+  try {
+    const buf = fs.readFileSync(targetPath);
+    if (buf.length < 16) return false;
+    const strSize = buf.readUInt32LE(12);
+    const headerStr = buf.subarray(16, 16 + strSize).toString('utf8');
+    return headerStr.includes('"i18n-runtime.js"');
+  } catch (_e) {
+    return false;
+  }
+}
+
+
 /**
  * Parses an Electron .asar archive into an in-memory file tree with Buffers.
  */
@@ -330,8 +344,12 @@ async function applyPatch() {
   const dict = JSON.parse(dictRaw);
   const runtimeRaw = fs.readFileSync(RUNTIME_PATH, 'utf8');
 
-  // 1. Create backup if not already backed up
-  if (!fs.existsSync(ASAR_BACKUP_PATH)) {
+  // 1. Create backup if not already backed up, or refresh backup if app.asar is a fresh unpatched update
+  const isCurrentPatched = isAsarPatched(ASAR_PATH);
+  if (!isCurrentPatched) {
+    console.log(`[1/4] 신규 버전(순정) 감지 -> 원본 백업 갱신: ${ASAR_BACKUP_PATH}`);
+    fs.copyFileSync(ASAR_PATH, ASAR_BACKUP_PATH);
+  } else if (!fs.existsSync(ASAR_BACKUP_PATH)) {
     console.log(`[1/4] 원본 백업 생성 중 -> ${ASAR_BACKUP_PATH}`);
     fs.copyFileSync(ASAR_PATH, ASAR_BACKUP_PATH);
   } else {
@@ -419,25 +437,144 @@ async function restorePatch() {
   }
 }
 
+
+async function waitForFileReady(filePath, maxRetries = 15, delayMs = 1000) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      if (!fs.existsSync(filePath)) {
+        await new Promise((r) => setTimeout(r, delayMs));
+        continue;
+      }
+      const fd = fs.openSync(filePath, 'r');
+      fs.closeSync(fd);
+      return true;
+    } catch (err) {
+      if (err.code === 'EBUSY' || err.code === 'EPERM') {
+        await new Promise((r) => setTimeout(r, delayMs));
+      } else {
+        throw err;
+      }
+    }
+  }
+  return false;
+}
+
+function showWindowsNotification(title, message) {
+  try {
+    const psCmd = `
+      [reflection.assembly]::loadwithpartialname('System.Windows.Forms') | Out-Null
+      $n = New-Object System.Windows.Forms.NotifyIcon
+      $n.Icon = [System.Drawing.SystemIcons]::Information
+      $n.Visible = $true
+      $n.ShowBalloonTip(5000, '${title.replace(/'/g, "''")}', '${message.replace(/'/g, "''")}', [System.Windows.Forms.ToolTipIcon]::Info)
+      Start-Sleep -Milliseconds 1500
+      $n.Dispose()
+    `;
+    const cp = require('child_process');
+    cp.spawn('powershell.exe', ['-NoProfile', '-WindowStyle', 'Hidden', '-Command', psCmd], {
+      detached: true,
+      stdio: 'ignore',
+    }).unref();
+  } catch (_e) {}
+}
+
+let isHealing = false;
+async function checkAndAutoHeal() {
+  if (isHealing) return;
+  if (!fs.existsSync(ASAR_PATH)) return;
+
+  const patched = isAsarPatched(ASAR_PATH);
+  if (!patched) {
+    isHealing = true;
+    const timeStr = new Date().toLocaleTimeString();
+    console.log(`[${timeStr}] [Auto-Heal] Antigravity 새 버전(순정 상태) 감지! 자동으로 한글 패치를 재적용합니다...`);
+
+    const ready = await waitForFileReady(ASAR_PATH, 15, 1000);
+    if (!ready) {
+      console.warn(`[Auto-Heal] app.asar 파일 준비 대기 시간 초과. 다음 주기에 재시도합니다.`);
+      isHealing = false;
+      return;
+    }
+
+    try {
+      await applyPatch();
+      console.log(`[${timeStr}] [Auto-Heal] 한글 패치가 자동으로 성공적으로 재적용되었습니다!`);
+      showWindowsNotification(
+        'Antigravity 한글 패치',
+        '앱 업데이트가 감지되어 한글 패치가 자동으로 재적용되었습니다.'
+      );
+    } catch (err) {
+      console.error(`[Auto-Heal 오류] 패치 재적용 실패:`, err.message);
+    } finally {
+      isHealing = false;
+    }
+  }
+}
+
+async function watchMode() {
+  console.log('============================================================');
+  console.log('  Antigravity 2.0 한글 패치 자동 유지 (Auto-Heal Watcher)');
+  console.log('============================================================');
+  console.log(`  - 감시 대상      : ${RESOURCES_DIR}`);
+  console.log('  - 동작 모드      : 업데이트 감지 시 자동 재적용 (백그라운드 상주)');
+  console.log('  - 종료 방법      : Ctrl + C\n');
+
+  // 1. Initial check
+  await checkAndAutoHeal();
+
+  // 2. Directory watcher with debouncing
+  let debounceTimer = null;
+  if (fs.existsSync(RESOURCES_DIR)) {
+    try {
+      fs.watch(RESOURCES_DIR, (eventType, filename) => {
+        if (!filename || filename.toLowerCase().includes('asar')) {
+          if (debounceTimer) clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => {
+            checkAndAutoHeal();
+          }, 3000);
+        }
+      });
+      console.log('[Auto-Heal] 실시간 디렉터리 감시가 활성화되었습니다.');
+    } catch (e) {
+      console.warn('[Auto-Heal] fs.watch 초기화 실패 (주기적 폴링으로 대체):', e.message);
+    }
+  }
+
+  // 3. Fallback polling every 30 seconds
+  setInterval(() => {
+    checkAndAutoHeal();
+  }, 30000);
+
+  // Keep process alive indefinitely
+  await new Promise(() => {});
+}
+
 function showStatus() {
   const hasAsar = fs.existsSync(ASAR_PATH);
   const hasBackup = fs.existsSync(ASAR_BACKUP_PATH);
-  let isPatched = false;
-  if (hasAsar) {
-    const buf = fs.readFileSync(ASAR_PATH);
-    const strSize = buf.readUInt32LE(12);
-    const headerStr = buf.subarray(16, 16 + strSize).toString('utf8');
-    isPatched = headerStr.includes('"i18n-runtime.js"');
-  }
+  const isPatched = isAsarPatched(ASAR_PATH);
   const dict = JSON.parse(fs.readFileSync(DICT_PATH, 'utf8'));
+
+  const STARTUP_DIR = path.join(
+    process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming'),
+    'Microsoft',
+    'Windows',
+    'Start Menu',
+    'Programs',
+    'Startup'
+  );
+  const STARTUP_LNK = path.join(STARTUP_DIR, 'AntigravityKoreanAutoHeal.lnk');
+  const hasAutoHeal = fs.existsSync(STARTUP_LNK);
+
   console.log('============================================================');
   console.log('  Antigravity 2.0 한글화 패치 상태 (Status)');
   console.log('============================================================');
-  console.log(`  - 설치 경로      : ${DEFAULT_APP_DIR}`);
-  console.log(`  - 패치 적용 여부 : ${isPatched ? '적용됨 (Patched)' : '미적용 (Original)'}`);
-  console.log(`  - 원본 백업 존재 : ${hasBackup ? '있음 (app.asar.bak)' : '없음'}`);
-  console.log(`  - 사전 버전      : v${dict.meta?.version} (${dict.meta?.updatedAt})`);
-  console.log(`  - 등록된 번역 수 : 네이티브 ${Object.keys(dict.native || {}).length}개 / 정적 UI ${Object.keys(dict.ui_exact || {}).length}개 / 동적 패턴 ${(dict.ui_patterns || []).length}개`);
+  console.log(`  - 설치 경로            : ${DEFAULT_APP_DIR}`);
+  console.log(`  - 패치 적용 여부       : ${isPatched ? '적용됨 (Patched)' : '미적용 (Original)'}`);
+  console.log(`  - 원본 백업 존재       : ${hasBackup ? '있음 (app.asar.bak)' : '없음'}`);
+  console.log(`  - 자동 유지(Auto-Heal) : ${hasAutoHeal ? '활성화됨 (부팅 시 자동 상주)' : '비활성화됨 (enable-autoheal 로 활성화)'}`);
+  console.log(`  - 사전 버전            : v${dict.meta?.version} (${dict.meta?.updatedAt})`);
+  console.log(`  - 등록된 번역 수       : 네이티브 ${Object.keys(dict.native || {}).length}개 / 정적 UI ${Object.keys(dict.ui_exact || {}).length}개 / 동적 패턴 ${(dict.ui_patterns || []).length}개`);
 }
 
 async function main() {
@@ -451,8 +588,10 @@ async function main() {
     await restorePatch();
   } else if (cmd === 'status') {
     showStatus();
+  } else if (cmd === 'watch') {
+    await watchMode();
   } else {
-    console.log('Usage: node src/patcher.js [apply|live|restore|status]');
+    console.log('Usage: node src/patcher.js [apply|live|restore|status|watch]');
   }
 }
 

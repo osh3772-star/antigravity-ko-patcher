@@ -43,6 +43,9 @@ irm https://raw.githubusercontent.com/osh3772-star/antigravity-ko-patcher/main/i
    - 현재 화면에 남아 있는 미번역 영문 UI 라벨을 자동으로 스캔하여 클립보드에 JSON 형식으로 복사합니다.
 5. **외부 사전 연동 (`locales/ko-KR.json`)**
    - `locales/ko-KR.json` 파일만 수정한 뒤 `.\patch.ps1 -Action live`를 실행(또는 앱에서 `Ctrl+R` 새로고침)하면 재패키징 없이 즉시 번역이 반영됩니다.
+6. **앱 업데이트 자동 감지 및 한글 유지 (Auto-Heal)**
+   - Antigravity가 새 버전으로 자동 업데이트되어 순정 `app.asar`로 덮어씌워지더라도, 백그라운드 감시자가 2~3초 내에 이를 감지하여 **새 버전에 맞춰 한글 패치를 자동으로 즉시 재적용**합니다.
+   - Windows 시작프로그램에 등록되어 PC 재부팅 후에도 백그라운드에서 투명하게 유지됩니다.
 
 ---
 
@@ -57,6 +60,12 @@ powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\.gemini\antigravity-k
 
 # 3. 패치 상태 및 번역 사전 통계 확인
 powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\.gemini\antigravity-ko-patcher\patch.ps1" -Action status
+
+# 4. 앱 업데이트 대비 자동 유지(Auto-Heal) 활성화 (PC 부팅 시 백그라운드 자동 상주)
+powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\.gemini\antigravity-ko-patcher\patch.ps1" -Action enable-autoheal
+
+# 5. 자동 유지(Auto-Heal) 해제
+powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\.gemini\antigravity-ko-patcher\patch.ps1" -Action disable-autoheal
 
 # 4. 원본 영문 상태로 완전 복원 (app.asar.bak 복구)
 powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\.gemini\antigravity-ko-patcher\patch.ps1" -Action restore

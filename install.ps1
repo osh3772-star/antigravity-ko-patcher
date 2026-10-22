@@ -1,9 +1,9 @@
-<#
+﻿<#
 .SYNOPSIS
     Antigravity 2.0 한국어 패치 원클릭 온라인 설치 스크립트 (install.ps1)
 .DESCRIPTION
     Git 설치 여부와 무관하게 ~/.gemini/antigravity-ko-patcher 경로에 패치 도구를 다운로드하고
-    즉시 Antigravity 2.0 한글화 패치(apply)를 실행합니다.
+    즉시 Antigravity 2.0 한국어 패치(apply) 및 자동 유지(enable-autoheal)를 적용합니다.
 .EXAMPLE
     irm https://raw.githubusercontent.com/osh3772-star/antigravity-ko-patcher/main/install.ps1 | iex
 #>
@@ -14,7 +14,7 @@ $ErrorActionPreference = "Stop"
 
 $RepoUrl = "https://github.com/osh3772-star/antigravity-ko-patcher.git"
 $RawBase = "https://raw.githubusercontent.com/osh3772-star/antigravity-ko-patcher/main"
-$InstallDir = Join-Path $env:USERPROFILE ".gemini\antigravity-ko-patcher"
+$InstallDir = Join-Path $env:USERPROFILE ".geminiantigravity-ko-patcher"
 
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host "  Antigravity 2.0 한국어 패치 자동 설치기 (Auto Installer)" -ForegroundColor Cyan
@@ -41,16 +41,21 @@ if ($GitCmd) {
     $Files = @(
         "patch.ps1",
         "README.md",
+        "AGENTS.md",
         "src/patcher.js",
         "src/i18n-runtime.js",
+        "src/auto-heal.vbs",
         "locales/ko-KR.json"
     )
     foreach ($File in $Files) {
-        $Target = Join-Path $InstallDir ($File -replace "/", "\")
+        $Target = Join-Path $InstallDir ($File -replace "/", "")
         Invoke-WebRequest -Uri "$RawBase/$File" -UseBasicParsing -OutFile $Target
     }
 }
 
 $PatchScript = Join-Path $InstallDir "patch.ps1"
-Write-Host "[설치기] 다운로드 완료! 한글 패치를 즉시 적용합니다..." -ForegroundColor Green
+Write-Host "[설치기] 다운로드 완료! 한국어 패치를 즉시 적용합니다..." -ForegroundColor Green
 & powershell -ExecutionPolicy Bypass -File $PatchScript -Action apply
+
+Write-Host "[설치기] 앱 업데이트 시 한글이 풀리지 않도록 자동 유지(Auto-Heal)를 등록합니다..." -ForegroundColor Green
+& powershell -ExecutionPolicy Bypass -File $PatchScript -Action enable-autoheal
