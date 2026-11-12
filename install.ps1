@@ -14,7 +14,7 @@ $ErrorActionPreference = "Stop"
 
 $RepoUrl = "https://github.com/osh3772-star/antigravity-ko-patcher.git"
 $RawBase = "https://raw.githubusercontent.com/osh3772-star/antigravity-ko-patcher/main"
-$InstallDir = Join-Path $env:USERPROFILE ".geminiantigravity-ko-patcher"
+$InstallDir = Join-Path $env:USERPROFILE ".gemini\antigravity-ko-patcher"
 
 Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host "  Antigravity 2.0 한국어 패치 자동 설치기 (Auto Installer)" -ForegroundColor Cyan
@@ -48,7 +48,7 @@ if ($GitCmd) {
         "locales/ko-KR.json"
     )
     foreach ($File in $Files) {
-        $Target = Join-Path $InstallDir ($File -replace "/", "")
+        $Target = Join-Path $InstallDir ($File -replace "/", "\")
         Invoke-WebRequest -Uri "$RawBase/$File" -UseBasicParsing -OutFile $Target
     }
 }

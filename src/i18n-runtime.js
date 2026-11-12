@@ -37,9 +37,12 @@
     '[contenteditable="true"]',
     '[aria-label="File Viewer"] .font-mono',
     '[data-no-i18n]',
+    '[data-quotable-inline="true"]',
+    '[data-quotable="true"].whitespace-pre-wrap',
+    '[data-testid="agent-response"] :is(p, li, blockquote, td, th, h1, h2, h3, h4)',
   ].join(',');
 
-  const TRANSLATABLE_ATTRS = ['placeholder', 'title', 'aria-label'];
+  const TRANSLATABLE_ATTRS = ['placeholder', 'title', 'aria-label', 'alt'];
 
   // Clean up any previously initialized runtime instance before re-initializing
   if (window.__AGY_KO_I18N__ && typeof window.__AGY_KO_I18N__.destroy === 'function') {
@@ -168,11 +171,12 @@
     const trimmed = raw.trim();
     if (!trimmed || trimmed.length > 500) return null;
 
-    // Normalize typographic apostrophes / quotes for lookup
+    // Normalize typographic apostrophes / quotes and multi-line whitespace for lookup
     const normalized = trimmed.replace(/[\u2018\u2019]/g, "'");
+    const collapsed = normalized.replace(/\s+/g, ' ');
 
     // 1. Exact lookup
-    let hit = exactMap.get(trimmed) ?? exactMap.get(normalized);
+    let hit = exactMap.get(trimmed) ?? exactMap.get(normalized) ?? exactMap.get(collapsed);
     if (hit !== undefined) {
       const lead = raw.match(/^\s*/)?.[0] || '';
       const trail = raw.match(/\s*$/)?.[0] || '';
@@ -370,7 +374,7 @@
       }
       if (pendingNodes.size > 0 && !scheduled) {
         scheduled = true;
-        requestAnimationFrame(flush);
+        setTimeout(flush, 16);
       }
     });
 

@@ -162,6 +162,7 @@ function patchMainJs(source, nativeDict) {
   const replacements = [
     ["label: 'New Window'", `label: '${nativeDict['New Window'] || '새 창'}'`],
     ["label: 'No agents running'", `label: '${nativeDict['No agents running'] || '실행 중인 에이전트 없음'}'`],
+    ['label: `Open ${electron_1.app.getName()}`', 'label: `${electron_1.app.getName()} 열기`'],
     ["label: 'Quit'", `label: '${nativeDict['Quit'] || '종료'}'`],
     ["buttons: ['Cancel', 'Quit']", `buttons: ['${nativeDict['Cancel'] || '취소'}', '${nativeDict['Quit'] || '종료'}']`],
     ["title: 'Confirm Quit'", `title: '${nativeDict['Confirm Quit'] || '종료 확인'}'`],
@@ -173,6 +174,18 @@ function patchMainJs(source, nativeDict) {
       "detail: 'There may be agents or background tasks running.'",
       `detail: '${nativeDict['There may be agents or background tasks running.'] || '실행 중인 에이전트나 백그라운드 작업이 있을 수 있습니다.'}'`,
     ],
+    ["showErrorBox('Binary not found'", `showErrorBox('${nativeDict['Binary not found'] || '바이너리를 찾을 수 없음'}'`],
+    ["title: 'WSL distro not found'", `title: '${nativeDict['WSL distro not found'] || 'WSL 배포판을 찾을 수 없음'}'`],
+    [
+      'message: `The WSL distro "${WSL_DISTRO}" is no longer installed.`',
+      'message: `WSL 배포판 "${WSL_DISTRO}"이(가) 더 이상 설치되어 있지 않습니다.`',
+    ],
+    [
+      "detail: 'Antigravity opened on Windows instead.'",
+      `detail: '${nativeDict['Antigravity opened on Windows instead.'] || '대신 Windows 환경에서 Antigravity를 열었습니다.'}'`,
+    ],
+    ["showErrorBox('WSL setup failed'", `showErrorBox('${nativeDict['WSL setup failed'] || 'WSL 설정 실패'}'`],
+    ["showErrorBox('Startup failed'", `showErrorBox('${nativeDict['Startup failed'] || '시작 실패'}'`],
   ];
   for (const [from, to] of replacements) {
     out = out.split(from).join(to);
@@ -187,6 +200,10 @@ function patchMenuJs(source, nativeDict) {
     ["label: 'Docs'", `label: '${nativeDict['Docs'] || '공식 문서'}'`],
     ["label: 'Connect to WSL'", `label: '${nativeDict['Connect to WSL'] || 'WSL에 연결'}'`],
     ["label: 'Reopen Locally'", `label: '${nativeDict['Reopen Locally'] || '로컬 환경으로 다시 열기'}'`],
+    ["label: item.label || 'Actual Size'", `label: '${nativeDict['Actual Size'] || '실제 크기'}'`],
+    ["label: item.label || 'Zoom In'", `label: '${nativeDict['Zoom In'] || '확대'}'`],
+    ["label: 'Zoom In'", `label: '${nativeDict['Zoom In'] || '확대'}'`],
+    ["label: item.label || 'Zoom Out'", `label: '${nativeDict['Zoom Out'] || '축소'}'`],
   ];
   for (const [from, to] of replacements) {
     out = out.split(from).join(to);
@@ -203,13 +220,119 @@ function patchTrayJs(source, nativeDict) {
   return out;
 }
 
-function patchWizardHtmlJs(source, uiExact) {
+function patchUpdaterJs(source, nativeDict) {
+  let out = source;
+  const replacements = [
+    ['MenuUpdateStep["CheckForUpdates"] = "Check for Updates";', `MenuUpdateStep["CheckForUpdates"] = "${nativeDict['Check for Updates'] || '업데이트 확인'}";`],
+    ['MenuUpdateStep["CheckingForUpdates"] = "Checking for Updates...";', `MenuUpdateStep["CheckingForUpdates"] = "${nativeDict['Checking for Updates...'] || '업데이트 확인 중...'}";`],
+    ['MenuUpdateStep["DownloadingUpdate"] = "Downloading Update...";', `MenuUpdateStep["DownloadingUpdate"] = "${nativeDict['Downloading Update...'] || '업데이트 다운로드 중...'}";`],
+    ['MenuUpdateStep["RestartToUpdate"] = "Restart to Update";', `MenuUpdateStep["RestartToUpdate"] = "${nativeDict['Restart to Update'] || '재시작하여 업데이트'}";`],
+    ["title: 'Check for Updates'", `title: '${nativeDict['Check for Updates'] || '업데이트 확인'}'`],
+    ["message: 'No updates available'", `message: '${nativeDict['No updates available'] || '사용 가능한 업데이트가 없습니다'}'`],
+    ["buttons: ['OK']", `buttons: ['${nativeDict['OK'] || '확인'}']`],
+  ];
+  for (const [from, to] of replacements) {
+    out = out.split(from).join(to);
+  }
+  return out;
+}
+
+function patchIpcHandlersJs(source, nativeDict) {
+  let out = source;
+  const replacements = [
+    ["showErrorBox('Cannot open folder'", `showErrorBox('${nativeDict['Cannot open folder'] || '폴더를 열 수 없음'}'`],
+    ["message: 'Folder is on the Windows filesystem'", `message: '${nativeDict['Folder is on the Windows filesystem'] || '폴더가 Windows 파일 시스템에 있습니다'}'`],
+    ["title: 'Open workspace'", `title: '${nativeDict['Open workspace'] || '작업 공간 열기'}'`],
+    ["title: 'Open workspaces'", `title: '${nativeDict['Open workspaces'] || '작업 공간 열기'}'`],
+    ["title: 'Select Download Folder'", `title: '${nativeDict['Select Download Folder'] || '다운로드 폴더 선택'}'`],
+  ];
+  for (const [from, to] of replacements) {
+    out = out.split(from).join(to);
+  }
+  return out;
+}
+
+function patchWizardHtmlJs(source, uiExact, nativeDict = {}) {
   let out = source;
   const replacements = [
     ['Welcome to Antigravity', uiExact['Welcome to Antigravity'] || 'Antigravity에 오신 것을 환영합니다'],
     ['Welcome to the new Antigravity!', uiExact['Welcome to the new Antigravity!'] || '새로운 Antigravity에 오신 것을 환영합니다!'],
     ['Download the Antigravity IDE', uiExact['Download the Antigravity IDE'] || 'Antigravity IDE 함께 다운로드'],
     ['Explore the new Antigravity', uiExact['Explore the new Antigravity'] || '새로운 Antigravity 시작하기'],
+    ['>Setting up…<', `>${nativeDict['Setting up…'] || '설정 중…'}<`],
+    [
+      "Antigravity has been redesigned to put agents first with new capabilities. If you'd still like a code editor, you can download it as a separate app named <b>Antigravity IDE</b>.",
+      'Antigravity가 새로운 기능과 함께 에이전트 중심 환경으로 새롭게 설계되었습니다. 코드 에디터가 필요하신 경우 별도 앱인 <b>Antigravity IDE</b>로 함께 다운로드하실 수 있습니다.',
+    ],
+  ];
+  for (const [from, to] of replacements) {
+    out = out.split(from).join(to);
+  }
+  return out;
+}
+
+function patchProvisionSplashJs(source, nativeDict = {}) {
+  return source.split('<div>Setting up WSL: ').join(`<div>${nativeDict['Setting up WSL: '] || 'WSL 설정 중: '}`);
+}
+
+function patchDeviceChooserJs(source, nativeDict = {}) {
+  let out = source;
+  const replacements = [
+    ["hid: 'HID device'", `hid: '${nativeDict['HID device'] || 'HID 기기'}'`],
+    ["usb: 'USB device'", `usb: '${nativeDict['USB device'] || 'USB 기기'}'`],
+    ["serial: 'serial port'", `serial: '${nativeDict['serial port'] || '직렬 포트'}'`],
+    ["'Unknown device'", `'${nativeDict['Unknown device'] || '알 수 없는 기기'}'`],
+    ["title: 'Connect a device'", `title: '${nativeDict['Connect a device'] || '기기 연결'}'`],
+    ['message: `${origin} wants to connect to a ${KIND_NOUNS[kind]}`', 'message: `${origin}에서 ${KIND_NOUNS[kind]} 연결을 요청합니다`'],
+    ["? 'Select a device:'", `? '${nativeDict['Select a device:'] || '기기를 선택하세요:'}'`],
+    [": 'No compatible devices found.'", `: '${nativeDict['No compatible devices found.'] || '호환되는 기기를 찾을 수 없습니다.'}'`],
+    ["buttons: [...snapshot.map(({ label }) => label), 'Cancel']", `buttons: [...snapshot.map(({ label }) => label), '${nativeDict['Cancel'] || '취소'}']`],
+  ];
+  for (const [from, to] of replacements) {
+    out = out.split(from).join(to);
+  }
+  return out;
+}
+
+function patchWebauthnAndCableJs(source, nativeDict = {}) {
+  let out = source;
+  const replacements = [
+    ["title: 'Choose a Passkey'", `title: '${nativeDict['Choose a Passkey'] || '패스키 선택'}'`],
+    ['message: `Sign in to ${rpLabel}`', 'message: `${rpLabel}에 로그인`'],
+    ["detail: 'Select a passkey account to continue:'", `detail: '${nativeDict['Select a passkey account to continue:'] || '계속하려면 패스키 계정을 선택하세요:'}'`],
+    ["buttons: [...accountLabels, 'Cancel']", `buttons: [...accountLabels, '${nativeDict['Cancel'] || '취소'}']`],
+    ['<title>Passkeys</title>', `<title>${nativeDict['Passkeys'] || '패스키'}</title>`],
+    ['<h1 class="sheet-title">Passkeys</h1>', `<h1 class="sheet-title">${nativeDict['Passkeys'] || '패스키'}</h1>`],
+    ['<p class="mechanism-header">Use your phone or tablet</p>', `<p class="mechanism-header">${nativeDict['Use your phone or tablet'] || '휴대폰 또는 태블릿 사용'}</p>`],
+    [
+      'Scan this QR code with the camera on the device that has your passkey for ${safeRpId}',
+      '${safeRpId} 패스키가 저장된 기기의 카메라로 이 QR 코드를 스캔하세요',
+    ],
+    ['onclick="window.close()">Cancel</button>', `onclick="window.close()">${nativeDict['Cancel'] || '취소'}</button>`],
+    ["title: 'Passkeys'", `title: '${nativeDict['Passkeys'] || '패스키'}'`],
+  ];
+  for (const [from, to] of replacements) {
+    out = out.split(from).join(to);
+  }
+  return out;
+}
+
+function patchWebviewPopupSecurityJs(source, nativeDict = {}) {
+  let out = source;
+  const replacements = [
+    ["insecure: 'Not secure'", `insecure: '${nativeDict['Not secure'] || '보안 연결 아님'}'`],
+    ["dangerous: '⚠ Not secure'", `dangerous: '${nativeDict['⚠ Not secure'] || '⚠ 보안 연결 아님'}'`],
+    ["'Your connection to this site is not secure'", `'${nativeDict['Your connection to this site is not secure'] || '이 사이트와의 연결이 안전하지 않습니다'}'`],
+    ["'Connection is secure'", `'${nativeDict['Connection is secure'] || '보안 연결됨'}'`],
+    [
+      "'Connection security information is not available for this page'",
+      `'${nativeDict['Connection security information is not available for this page'] || '이 페이지의 연결 보안 정보를 확인할 수 없습니다'}'`,
+    ],
+    ["'Certificate is valid'", `'${nativeDict['Certificate is valid'] || '유효한 인증서'}'`],
+    ["'Certificate details'", `'${nativeDict['Certificate details'] || '인증서 세부 정보'}'`],
+    ["label: 'Connection info…'", `label: '${nativeDict['Connection info…'] || '연결 정보…'}'`],
+    ["title: 'Connection info'", `title: '${nativeDict['Connection info'] || '연결 정보'}'`],
+    ["buttons: ['OK']", `buttons: ['${nativeDict['OK'] || '확인'}']`],
   ];
   for (const [from, to] of replacements) {
     out = out.split(from).join(to);
@@ -226,20 +349,32 @@ function patchUtilsJs(source, externalDictPath) {
   const escapedExternalDictPath = externalDictPath.replace(/\\/g, '\\\\');
   const injectionHook = `
     ${marker}
+    const __buildAgyKoScript = () => {
+        const extDictPath = '${escapedExternalDictPath}';
+        const bundledDictPath = path_1.default.join(__dirname, 'ko-KR.json');
+        const runtimePath = path_1.default.join(__dirname, 'i18n-runtime.js');
+        const dictRaw = fs.existsSync(extDictPath)
+            ? fs.readFileSync(extDictPath, 'utf-8')
+            : fs.readFileSync(bundledDictPath, 'utf-8');
+        const runtimeCode = fs.readFileSync(runtimePath, 'utf-8');
+        return \`window.__AGY_KO_DICT__ = \${dictRaw};\\n\${runtimeCode}\`;
+    };
     win.webContents.on('dom-ready', () => {
         try {
-            const extDictPath = '${escapedExternalDictPath}';
-            const bundledDictPath = path_1.default.join(__dirname, 'ko-KR.json');
-            const runtimePath = path_1.default.join(__dirname, 'i18n-runtime.js');
-            const dictRaw = fs.existsSync(extDictPath)
-                ? fs.readFileSync(extDictPath, 'utf-8')
-                : fs.readFileSync(bundledDictPath, 'utf-8');
-            const runtimeCode = fs.readFileSync(runtimePath, 'utf-8');
-            const scriptToRun = \`window.__AGY_KO_DICT__ = \${dictRaw};\\n\${runtimeCode}\`;
-            void win.webContents.executeJavaScript(scriptToRun).catch(() => {});
+            void win.webContents.executeJavaScript(__buildAgyKoScript()).catch(() => {});
         } catch (err) {
             console.error('[AGY-KO] Failed to inject Korean i18n runtime:', err);
         }
+    });
+    win.webContents.on('did-frame-finish-load', (_ev, isMainFrame, frameProcessId, frameRoutingId) => {
+        if (isMainFrame) return;
+        try {
+            const frame = electron_1.webFrameMain?.fromId?.(frameProcessId, frameRoutingId);
+            const fUrl = frame?.url || '';
+            if (frame && (fUrl.startsWith('plugin://') || fUrl.startsWith('https://127.0.0.1') || fUrl.startsWith('http://127.0.0.1'))) {
+                void frame.executeJavaScript(__buildAgyKoScript()).catch(() => {});
+            }
+        } catch (_err) {}
     });
 `;
 
@@ -271,7 +406,11 @@ async function injectIntoLiveWindow(mode = 'apply') {
 
     const res = await fetch(`http://127.0.0.1:${cdpPort}/json`);
     const targets = await res.json();
-    const pageTargets = targets.filter((t) => t.type === 'page' && t.webSocketDebuggerUrl);
+    const pageTargets = targets.filter(
+      (t) =>
+        (t.type === 'page' || (t.type === 'iframe' && typeof t.url === 'string' && t.url.startsWith('plugin://'))) &&
+        t.webSocketDebuggerUrl
+    );
 
     if (pageTargets.length === 0) {
       return { injected: false, reason: '열려 있는 Antigravity 창이 없습니다.' };
@@ -364,24 +503,64 @@ async function applyPatch() {
 
   // 3. Patch Native Electron JS files + inject preload/dom-ready runtime
   console.log('[3/4] 네이티브 메뉴 및 DOM 번역 런타임 주입 중...');
+  const nativeDict = dict.native || {};
   distFiles['main.js'].__buffer = Buffer.from(
-    patchMainJs(distFiles['main.js'].__buffer.toString('utf8'), dict.native || {}),
+    patchMainJs(distFiles['main.js'].__buffer.toString('utf8'), nativeDict),
     'utf8'
   );
   distFiles['menu.js'].__buffer = Buffer.from(
-    patchMenuJs(distFiles['menu.js'].__buffer.toString('utf8'), dict.native || {}),
+    patchMenuJs(distFiles['menu.js'].__buffer.toString('utf8'), nativeDict),
     'utf8'
   );
   distFiles['tray.js'].__buffer = Buffer.from(
-    patchTrayJs(distFiles['tray.js'].__buffer.toString('utf8'), dict.native || {}),
+    patchTrayJs(distFiles['tray.js'].__buffer.toString('utf8'), nativeDict),
     'utf8'
   );
+  if (distFiles['updater.js']) {
+    distFiles['updater.js'].__buffer = Buffer.from(
+      patchUpdaterJs(distFiles['updater.js'].__buffer.toString('utf8'), nativeDict),
+      'utf8'
+    );
+  }
+  if (distFiles['ipcHandlers.js']) {
+    distFiles['ipcHandlers.js'].__buffer = Buffer.from(
+      patchIpcHandlersJs(distFiles['ipcHandlers.js'].__buffer.toString('utf8'), nativeDict),
+      'utf8'
+    );
+  }
   if (distFiles.ideInstall?.files?.['wizardHtml.js']) {
     distFiles.ideInstall.files['wizardHtml.js'].__buffer = Buffer.from(
       patchWizardHtmlJs(
         distFiles.ideInstall.files['wizardHtml.js'].__buffer.toString('utf8'),
-        dict.ui_exact || {}
+        dict.ui_exact || {},
+        nativeDict
       ),
+      'utf8'
+    );
+  }
+  if (distFiles['provisionSplash.js']) {
+    distFiles['provisionSplash.js'].__buffer = Buffer.from(
+      patchProvisionSplashJs(distFiles['provisionSplash.js'].__buffer.toString('utf8'), nativeDict),
+      'utf8'
+    );
+  }
+  if (distFiles['deviceChooser.js']) {
+    distFiles['deviceChooser.js'].__buffer = Buffer.from(
+      patchDeviceChooserJs(distFiles['deviceChooser.js'].__buffer.toString('utf8'), nativeDict),
+      'utf8'
+    );
+  }
+  for (const webauthnFile of ['webauthn.js', 'cablev2.js']) {
+    if (distFiles[webauthnFile]) {
+      distFiles[webauthnFile].__buffer = Buffer.from(
+        patchWebauthnAndCableJs(distFiles[webauthnFile].__buffer.toString('utf8'), nativeDict),
+        'utf8'
+      );
+    }
+  }
+  if (distFiles['webviewPopupSecurity.js']) {
+    distFiles['webviewPopupSecurity.js'].__buffer = Buffer.from(
+      patchWebviewPopupSecurityJs(distFiles['webviewPopupSecurity.js'].__buffer.toString('utf8'), nativeDict),
       'utf8'
     );
   }
